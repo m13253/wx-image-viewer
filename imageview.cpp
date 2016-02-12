@@ -62,13 +62,20 @@ bool MyImagePanel::SetImageFile(const wxString &filename) {
 }
 
 void MyImagePanel::DoPaint() {
-    double scale_factor = 1;
     if(image.IsOk()) {
         wxClientDC dc(this);
-        dc.SetLogicalScale(1/scale_factor, 1/scale_factor); // A possible bug in GTK+3 backend, omitting this line causes aliasing on HiDPI screens
+#ifdef __WXGTK3__
+        double scale_factor = 1; // FIXME: HiDPI scale factor
+        // FIXME: A possible bug in GTK+3 backend, omitting this line causes aliasing on HiDPI screens
+        dc.SetLogicalScale(1/scale_factor, 1/scale_factor);
+#endif
         int width, height;
         dc.GetSize(&width, &height);
-        wxBitmap resized(image.Scale(width*scale_factor, height*scale_factor, wxIMAGE_QUALITY_BICUBIC));
+#ifdef __WXGTK3__
+        width *= scale_factor;
+        height *= scale_factor;
+#endif
+        wxBitmap resized(image.Scale(width, height, wxIMAGE_QUALITY_BICUBIC));
         dc.DrawBitmap(resized, 0, 0);
     }
 }
@@ -116,7 +123,7 @@ void MyFrame::OnAbout(wxCommandEvent &event) {
     wxAboutDialogInfo about_info;
     about_info.SetName("Simple Image Viewer");
     about_info.SetVersion("0.1.0");
-    about_info.SetDescription("A simple image viewer application written in wxWidgets, demonstrating its image drawing capacities.");
+    about_info.SetDescription("A simple image viewer application written in wxWidgets, demonstrating its image drawing capabilities.");
     about_info.SetCopyright("\xc2\xa9 2016 Star Brilliant <m13253\x40hotmail.com>");
     about_info.SetWebSite("https://github.com/m13253/wx-image-viewer");
     about_info.AddDeveloper("Star Brilliant <m13253\x40hotmail.com>");
