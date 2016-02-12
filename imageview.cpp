@@ -124,7 +124,7 @@ void MyFrame::OnAbout(wxCommandEvent &event) {
     about_info.SetName("Simple Image Viewer");
     about_info.SetVersion("0.1.0");
     about_info.SetDescription("A simple image viewer application written in wxWidgets, demonstrating its image drawing capabilities.");
-    about_info.SetCopyright("\xc2\xa9 2016 Star Brilliant <m13253\x40hotmail.com>");
+    about_info.SetCopyright(L"\u00a9 2016 Star Brilliant <m13253\x40hotmail.com>");
     about_info.SetWebSite("https://github.com/m13253/wx-image-viewer");
     about_info.AddDeveloper("Star Brilliant <m13253\x40hotmail.com>");
     wxAboutBox(about_info, this);
