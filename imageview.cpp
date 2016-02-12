@@ -1,3 +1,4 @@
+#include <wx/aboutdlg.h>
 #include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/dcclient.h>
@@ -32,11 +33,13 @@ private:
     MyImagePanel *image_panel;
     void OnOpen(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
+    void OnAbout(wxCommandEvent &event);
     wxDECLARE_EVENT_TABLE();
 };
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(wxID_OPEN, MyFrame::OnOpen)
     EVT_MENU(wxID_EXIT, MyFrame::OnExit)
+    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
 wxEND_EVENT_TABLE()
 
 class MyApp : public wxApp {
@@ -88,6 +91,9 @@ MyFrame::MyFrame() :
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
     menuBar->Append(menuFile, "&File");
+    auto menuHelp = new wxMenu;
+    menuHelp->Append(wxID_ABOUT);
+    menuBar->Append(menuHelp, "&Help");
     SetMenuBar(menuBar);
 
     auto sizer = new wxBoxSizer(wxVERTICAL);
@@ -104,6 +110,17 @@ void MyFrame::OnOpen(wxCommandEvent &event) {
 
 void MyFrame::OnExit(wxCommandEvent &event) {
     Close(true);
+}
+
+void MyFrame::OnAbout(wxCommandEvent &event) {
+    wxAboutDialogInfo about_info;
+    about_info.SetName("Simple Image Viewer");
+    about_info.SetVersion("0.1.0");
+    about_info.SetDescription("A simple image viewer application written in wxWidgets, demonstrating its image drawing capacities.");
+    about_info.SetCopyright("\xc2\xa9 2016 Star Brilliant <m13253\x40hotmail.com>");
+    about_info.SetWebSite("https://github.com/m13253/wx-image-viewer");
+    about_info.AddDeveloper("Star Brilliant <m13253\x40hotmail.com>");
+    wxAboutBox(about_info, this);
 }
 
 bool MyApp::OnInit() {
