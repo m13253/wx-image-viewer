@@ -29,7 +29,7 @@ class MyFrame : public wxFrame {
 public:
     MyFrame();
 private:
-    MyImagePanel image_panel;
+    MyImagePanel *image_panel;
     void OnOpen(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
     wxDECLARE_EVENT_TABLE();
@@ -80,7 +80,7 @@ void MyImagePanel::OnSize(wxSizeEvent &event) {
 
 MyFrame::MyFrame() :
     wxFrame(nullptr, wxID_ANY, "Simple Image Viewer"),
-    image_panel(this) {
+    image_panel(new MyImagePanel(this)) {
 
     auto menuBar = new wxMenuBar;
     auto menuFile = new wxMenu;
@@ -91,7 +91,7 @@ MyFrame::MyFrame() :
     SetMenuBar(menuBar);
 
     auto sizer = new wxBoxSizer(wxVERTICAL);
-    sizer->Add(&image_panel, 1, wxEXPAND);
+    sizer->Add(image_panel, 1, wxEXPAND);
     SetSizer(sizer);
 }
 
@@ -99,7 +99,7 @@ void MyFrame::OnOpen(wxCommandEvent &event) {
     wxFileDialog dialog(this, "Choose image file");
     if(dialog.ShowModal() == wxID_CANCEL)
         return;
-    image_panel.SetImageFile(dialog.GetPath());
+    image_panel->SetImageFile(dialog.GetPath());
 }
 
 void MyFrame::OnExit(wxCommandEvent &event) {
